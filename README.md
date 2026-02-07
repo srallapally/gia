@@ -1,27 +1,79 @@
 # GIA - Governance Identity API Client
 
-`gia` is a Python client for the Governance Identity API (IGA) in PingOne Advanced Identity Cloud. It provides both a thin REST client wrapper for the `/governance/application` endpoints and a high-level builder for managing disconnected applications.
+`gia` is a comprehensive toolkit for interacting with the PingOne Advanced Identity Cloud Governance (IGA) API. It provides a powerful Python library for programmatic access and a feature-rich CLI for manual or scripted management of Governance applications.
 
-## Features
+## Key Features
 
 - **OAuth2 Authentication**: Automatic token management using client credentials.
-- **Auto-Pagination**: Seamlessly fetch all results from paginated endpoints.
-- **Disconnected Applications**: High-level template builder for creating and updating disconnected applications.
-- **File Uploads**: Easy CSV upload support for disconnected data (accounts, resources).
-- **Retry Logic**: Built-in retries for transient network errors and rate limiting.
+- **Python Library**: High-level and low-level interfaces for IGA applications and data.
+- **CLI Tool**: Full command-line interface for application management and data loading.
+- **Disconnected Applications**: Declarative way to define and manage disconnected applications.
+- **CSV Data Loading**: Seamlessly upload and monitor CSV data for accounts and resources.
+- **Pagination & Retries**: Built-in handling for large datasets and transient network errors.
 
 ## Installation
 
+### Python Library
 ```bash
-# From source (development)
-pip install -e .
+# From source
+pip install .
+
+# For development
+pip install -e ".[dev]"
 ```
 
-## Quick Start
+### CLI Tool
+The CLI is automatically installed as `gia` when you install the package.
 
-### Thin REST Client
+```bash
+# Verify installation
+gia --version
+```
 
-The `IGAClient` provides direct access to the application endpoints.
+---
+
+## CLI Usage
+
+The GIA CLI allows you to manage applications and data directly from your terminal.
+
+### 1. Configuration
+Set up your connection to PingOne IGA:
+```bash
+gia configure
+```
+You will be prompted for your Tenant URL, Client ID, Client Secret, and Token Endpoint. Profiles are supported via the `--profile` flag.
+
+### 2. Application Management
+```bash
+# List applications
+gia app list
+
+# Create an application from a YAML config
+gia app create app-config.yaml
+
+# Get application details and export to YAML
+gia app get <app-id> --export app.yaml
+```
+
+### 3. Data Loading
+```bash
+# Load CSV data to an application
+gia data load <app-id> users.csv --type __ACCOUNT__
+
+# Monitor upload status
+gia data status <app-id> <upload-id>
+```
+
+For more detailed CLI information, see [CLI-README.md](CLI-README.md).
+
+---
+
+## Python Library Usage
+
+The `gia` package offers two main ways to interact with the API.
+
+### IGAClient (REST Wrapper)
+`IGAClient` provides direct access to the `/governance/application` endpoints.
 
 ```python
 from gia import IGAClient
@@ -37,14 +89,10 @@ client = IGAClient(
 apps = client.applications.list_applications()
 for app in apps:
     print(f"{app['id']}: {app['name']}")
-
-# Get a specific application
-app = client.applications.get_application("abc-123")
 ```
 
-### Disconnected Application Builder
-
-The `DisconnectedApplication` class provides a declarative way to define and "push" an application configuration to PingOne IGA.
+### DisconnectedApplication (High-Level Builder)
+Declaratively define an application and its schema, then "push" it to IGA.
 
 ```python
 from gia import IGAClient, DisconnectedApplication
@@ -55,7 +103,7 @@ app = DisconnectedApplication(
     description="Main SAP HR system"
 )
 
-# Add object types
+# Add object types and schema
 app.add_object_type(
     id="__ACCOUNT__", 
     type="account", 
@@ -65,27 +113,38 @@ app.add_object_type(
 # Attach a CSV file for upload
 app.add_file_upload("users.csv", "__ACCOUNT__")
 
-# Initialize client
+# Initialize client and push
 client = IGAClient(...)
-
-# Push to IGA (finds existing application by name or creates a new one)
 result = app.push(client, upsert=True)
 print(f"Application ID: {result.application_id}")
 ```
 
+---
+
 ## Project Structure
 
-- `gia/client.py`: Core `IGAClient` with HTTP helper methods.
-- `gia/applications.py`: Wrappers for `/governance/application` endpoints.
-- `gia/templates.py`: `DisconnectedApplication` builder and CSV upload logic.
-- `gia/auth.py`: OAuth2 Client Credentials implementation.
-- `gia/exceptions.py`: Custom exception classes.
+- `gia/`: Core Python library.
+    - `client.py`: Base HTTP client and pagination logic.
+    - `applications.py`: REST wrappers for application endpoints.
+    - `templates.py`: Disconnected application builder.
+    - `auth.py`: OAuth2 authentication.
+- `gia_cli/`: CLI implementation using Click.
+- `examples/`: Sample configuration and data files.
+- `tests/`: Comprehensive test suite.
+
+## Documentation
+
+- [CLI-README.md](CLI-README.md) - Full CLI command reference.
+- [QUICK-START.md](QUICK-START.md) - Get up and running in minutes.
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Building and distribution guide.
+- [IMPLEMENTATION.md](IMPLEMENTATION.md) - Technical architecture details.
 
 ## Development
 
 ### Running Tests
-
 ```bash
-pip install -e ".[dev]"
 pytest
 ```
+
+## License
+MIT
