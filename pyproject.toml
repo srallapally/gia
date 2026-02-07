@@ -17,7 +17,10 @@ dependencies = [
 dev = ["pytest>=7.0", "pyinstaller>=5.0"]
 
 [project.scripts]
-gia = "gia_cli:cli"
+gia = "gia_cli.cli:cli"
+
+[tool.setuptools]
+packages = ["gia", "gia_cli"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
