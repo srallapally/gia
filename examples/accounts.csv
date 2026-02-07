@@ -1,0 +1,12 @@
+id,email,firstName,lastName,department,title,manager,hireDate,status
+EMP001,john.doe@company.com,John,Doe,Engineering,Senior Engineer,EMP100,2020-01-15,active
+EMP002,jane.smith@company.com,Jane,Smith,Engineering,Engineering Manager,EMP200,2019-03-20,active
+EMP003,bob.johnson@company.com,Bob,Johnson,Sales,Sales Representative,EMP101,2021-06-10,active
+EMP004,alice.williams@company.com,Alice,Williams,Marketing,Marketing Manager,EMP200,2018-11-05,active
+EMP005,charlie.brown@company.com,Charlie,Brown,Engineering,Junior Engineer,EMP002,2022-09-01,active
+EMP006,diana.prince@company.com,Diana,Prince,HR,HR Manager,EMP200,2017-04-12,active
+EMP007,peter.parker@company.com,Peter,Parker,Engineering,Software Engineer,EMP002,2021-02-28,active
+EMP008,mary.jane@company.com,Mary,Jane,Sales,Sales Manager,EMP200,2019-07-15,active
+EMP100,tony.stark@company.com,Tony,Stark,Engineering,VP Engineering,EMP200,2015-01-10,active
+EMP101,steve.rogers@company.com,Steve,Rogers,Sales,VP Sales,EMP200,2016-05-20,active
+EMP200,nick.fury@company.com,Nick,Fury,Executive,CEO,,2010-01-01,active

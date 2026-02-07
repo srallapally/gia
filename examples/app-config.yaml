@@ -1,0 +1,89 @@
+# Example Application Configuration
+# This file defines a complete disconnected application for GIA
+
+name: "Corporate SAP"
+description: "Main SAP HR system for employee data"
+
+# Optional: Application owner IDs
+# owner_ids:
+#   - "user-123"
+#   - "user-456"
+
+# Optional: Application icon
+# icon: "data:image/svg+xml;base64,..."
+
+# Object types define the schema for data entities
+object_types:
+  
+  # Account object type (users/employees)
+  __ACCOUNT__:
+    type: account
+    properties:
+      id:
+        type: string
+        description: "Unique employee ID"
+      email:
+        type: string
+        description: "Employee email address"
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      department:
+        type: string
+        description: "Department name"
+      title:
+        type: string
+        description: "Job title"
+      manager:
+        type: string
+        description: "Manager's employee ID"
+      hireDate:
+        type: string
+        description: "Hire date (ISO format)"
+      status:
+        type: string
+        description: "Employment status (active/inactive)"
+  
+  # Group object type (departments, teams)
+  __GROUP__:
+    type: group
+    properties:
+      id:
+        type: string
+        description: "Unique group ID"
+      name:
+        type: string
+        description: "Group name"
+      description:
+        type: string
+        description: "Group description"
+      groupType:
+        type: string
+        description: "Type of group (department/team/project)"
+      owner:
+        type: string
+        description: "Group owner employee ID"
+  
+  # Permission object type (application permissions)
+  __PERMISSION__:
+    type: permission
+    properties:
+      id:
+        type: string
+        description: "Unique permission ID"
+      name:
+        type: string
+        description: "Permission name"
+      description:
+        type: string
+        description: "What this permission grants"
+      riskLevel:
+        type: string
+        description: "Risk level (low/medium/high)"
+
+# Usage:
+# gia app create app-config.yaml
+# gia app update <app-id> app-config.yaml

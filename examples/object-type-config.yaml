@@ -1,0 +1,31 @@
+# Example Object Type Configuration
+# This file defines a single object type to add to an existing application
+
+id: "__RESOURCE__"
+type: resource
+properties:
+  id:
+    type: string
+    description: "Unique resource ID"
+  name:
+    type: string
+    description: "Resource name"
+  resourceType:
+    type: string
+    description: "Type of resource (server/database/application)"
+  owner:
+    type: string
+    description: "Resource owner employee ID"
+  location:
+    type: string
+    description: "Physical or cloud location"
+  environment:
+    type: string
+    description: "Environment (dev/staging/prod)"
+  criticality:
+    type: string
+    description: "Business criticality (low/medium/high/critical)"
+
+# Usage:
+# gia object add <app-id> object-type-config.yaml
+# gia object update <app-id> __RESOURCE__ object-type-config.yaml
