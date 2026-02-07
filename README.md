@@ -13,7 +13,52 @@
 
 ## Installation
 
-### Python Library
+### Option 1: Binary Installation (Mac Users - Recommended)
+
+**No Python required!** Download and install the standalone binary.
+
+#### Step 1: Download the GIA binary
+
+Visit the release page:
+**https://github.com/srallapally/gia/releases/tag/early-access**
+
+Or download directly from terminal:
+```bash
+curl -L -o gia https://github.com/srallapally/gia/releases/download/early-access/gia
+```
+
+#### Step 2: Make it executable and install
+
+```bash
+chmod +x gia
+sudo mv gia /usr/local/bin/
+```
+
+#### Step 3: Verify installation
+
+```bash
+gia --version
+```
+
+#### macOS Security Note
+
+If macOS blocks the binary with "cannot be opened because it is from an unidentified developer":
+
+**Option A: Remove quarantine attribute**
+```bash
+sudo xattr -d com.apple.quarantine /usr/local/bin/gia
+```
+
+**Option B: Allow via System Preferences**
+1. Try to run `gia --help`
+2. Go to **System Preferences → Security & Privacy**
+3. Click **"Allow Anyway"**
+4. Run `gia --help` again and click **"Open"**
+
+### Option 2: Python Library Installation
+
+For developers who want to use GIA as a Python library:
+
 ```bash
 # From source
 pip install .
@@ -22,12 +67,71 @@ pip install .
 pip install -e ".[dev]"
 ```
 
-### CLI Tool
 The CLI is automatically installed as `gia` when you install the package.
 
 ```bash
 # Verify installation
 gia --version
+```
+
+---
+
+## Getting Started (5 minutes)
+
+### 1. Configure your credentials
+
+```bash
+gia configure
+```
+
+You'll be prompted for:
+- **Base URL**: Your PingOne tenant URL (e.g., `https://tenant.forgeblocks.com`)
+- **Client ID**: Your OAuth2 client ID
+- **Client Secret**: Your OAuth2 client secret
+- **Token Endpoint**: (auto-suggested, just press Enter)
+- **Scopes**: (optional, just press Enter to skip)
+
+### 2. Test the connection
+
+```bash
+gia app list
+```
+
+This should display your existing applications.
+
+### 3. Create your first application
+
+**Interactive mode:**
+```bash
+gia app create --interactive
+```
+
+**From a config file:**
+
+Create `my-app.yaml`:
+```yaml
+name: "Test Application"
+description: "My first GIA app"
+
+object_types:
+  __ACCOUNT__:
+    type: account
+    properties:
+      email: {type: string}
+      firstName: {type: string}
+      lastName: {type: string}
+```
+
+Then run:
+```bash
+gia app create my-app.yaml
+```
+
+### 4. Load data
+
+```bash
+gia data load <app-id> users.csv --type __ACCOUNT__
+gia data status <app-id> <upload-id>
 ```
 
 ---
@@ -131,6 +235,49 @@ print(f"Application ID: {result.application_id}")
 - `gia_cli/`: CLI implementation using Click.
 - `examples/`: Sample configuration and data files.
 - `tests/`: Comprehensive test suite.
+
+---
+
+## Troubleshooting
+
+### Command not found: gia
+**Solution:** Make sure you ran `sudo mv gia /usr/local/bin/`
+
+### Permission denied when running gia
+**Solution:** Run `chmod +x /usr/local/bin/gia`
+
+### "gia" is damaged and can't be opened (macOS)
+**Solution:** Remove the quarantine attribute:
+```bash
+sudo xattr -d com.apple.quarantine /usr/local/bin/gia
+```
+
+### Authentication fails
+**Solution:**
+1. Verify your credentials are correct
+2. Reconfigure: `gia configure`
+3. Check your config: `cat ~/.gia/config.yaml`
+
+### Upload failures
+**Solution:** View detailed errors:
+```bash
+gia data failures <app-id> <upload-id>
+gia data failures <app-id> <upload-id> --export errors.csv
+```
+
+---
+
+## Uninstall
+
+```bash
+# Remove binary
+sudo rm /usr/local/bin/gia
+
+# Remove configuration
+rm -rf ~/.gia
+```
+
+---
 
 ## Documentation
 
